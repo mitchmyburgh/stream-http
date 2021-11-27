@@ -39,7 +39,7 @@ http.request = function (opts, cb) {
 	return req
 }
 
-http.get = function get (opts, cb) {
+http.get = function get(opts, cb) {
 	var req = http.request(opts, cb)
 	req.end()
 	return req
@@ -48,7 +48,24 @@ http.get = function get (opts, cb) {
 http.ClientRequest = ClientRequest
 http.IncomingMessage = response.IncomingMessage
 
-http.Agent = function () {}
+if (!http.ServerResponse) {
+	http.ServerResponseProto = {
+		_headers: {},
+		setHeader: function setHeader(name, value) {
+			console.log('set header %s to %s', name, value)
+			this._headers[name] = value
+		},
+		getHeader: function getHeader(name) {
+			return this._headers[name]
+		},
+		get: function get(name) {
+			return this._headers[name]
+		}
+	}
+	http.ServerResponse = Object.create({}, http.ServerResponseProto)
+}
+
+http.Agent = function () { }
 http.Agent.defaultMaxSockets = 4
 
 http.globalAgent = new http.Agent()
