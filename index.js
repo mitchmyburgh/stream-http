@@ -49,20 +49,21 @@ http.ClientRequest = ClientRequest
 http.IncomingMessage = response.IncomingMessage
 
 if (!http.ServerResponse) {
-	http.ServerResponseProto = {
-		_headers: {},
-		setHeader: function setHeader(name, value) {
-			console.log('set header %s to %s', name, value)
-			this._headers[name] = value
-		},
-		getHeader: function getHeader(name) {
-			return this._headers[name]
-		},
-		get: function get(name) {
-			return this._headers[name]
-		}
+	http.ServerResponse = function ServerResponse() {
+		this._headers = {}
 	}
-	http.ServerResponse = Object.create({}, http.ServerResponseProto)
+	http.ServerResponse.prototype.setHeader = function setHeader(name, value) {
+		console.log('set header %s to %s', name, value)
+		this._headers[name] = value
+	}
+
+	http.ServerResponse.prototype.getHeader = function getHeader(name) {
+		return this._headers[name]
+	}
+
+	http.ServerResponse.prototype.get = function get(name) {
+		return this._headers[name]
+	}
 }
 
 http.Agent = function () { }
